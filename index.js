@@ -34,7 +34,7 @@ async function invokeAction({ action, id, name, email, phone }) {
     case "remove":
       try {
         await contacts.removeContact(id);
-        console.log("The contact has been removed");
+        console.log(`The contact "id: ${id}" has been removed`);
       } catch (error) {
         console.log(error)
       }
@@ -43,7 +43,7 @@ async function invokeAction({ action, id, name, email, phone }) {
     case "add":
       try {
         await contacts.addContact(name, email, phone);
-        console.log("The contact:  has been added");
+        console.log(`The contact "${name}, ${email}, ${phone}" has been added`);
       } catch (error) {
         console.log(error);
       }
