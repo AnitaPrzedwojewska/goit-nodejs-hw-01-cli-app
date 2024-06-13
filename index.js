@@ -1,22 +1,57 @@
-const contacts = require('./contacts');
+const contacts = require("./contacts");
+const path = require("path");
+const { program } = require("commander");
 
-function list() {
-  contacts.listContacts();
+program
+  .option("-a, --action <type>", "choose action")
+  .option("-i, --id <type>", "user id")
+  .option("-n, --name <type>", "user name")
+  .option("-e, --email <type>", "user email")
+  .option("-p, --phone <type>", "user phone");
+program.parse(process.argv);
+const argv = program.opts();
+
+async function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case "list":
+      try {
+        const resultsList = await contacts.listContacts();
+        console.table(resultsList);
+      } catch (error) {
+        console.log(error)
+      }
+      break;
+
+    case "get":
+      try {
+        const resultsGet = await contacts.getContactById(id);
+        console.table(resultsGet);
+      } catch (error) {
+        console.log(error)
+      }
+      break;
+
+    case "remove":
+      try {
+        await contacts.removeContact(id);
+        console.log("The contact has been removed");
+      } catch (error) {
+        console.log(error)
+      }
+      break;
+
+    case "add":
+      try {
+        await contacts.addContact(name, email, phone);
+        console.log("The contact:  has been added");
+      } catch (error) {
+        console.log(error);
+      }
+      break;
+
+    default:
+      console.warn("\x1B[31m Unknown action type!");
+  }
 }
 
-function get(id) {
-  contacts.getContactById(id);
-}
-
-function remove(id) {
-  contacts.removeContact(id);
-}
-
-function add(name, email, phone) {
-  contacts.addContact(name, email, phone);
-}
-
-list();
-get("qdggE76Jtbfd9eWJHrssH");
-add("Ana Parker", "ana.parker@gmail.com", "876-932-145");
-remove("qdggE76Jtbfd9eWJHrssH");
+invokeAction(argv);
