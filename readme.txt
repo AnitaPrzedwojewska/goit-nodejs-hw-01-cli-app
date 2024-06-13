@@ -1,0 +1,1 @@
+Oto ja , plik readme.txt.
